@@ -203,12 +203,12 @@ export class APIClient {
   }
 
   /**
-   * Iterates each finding resource in the provider.
+   * Iterates each pentest (penetration test) resource in the provider.
    *
    * @param iteratee receives each resource to produce entities/relationships
    */
   public async iteratePentests(
-    iteratee: ResourceIteratee<CobaltFinding>,
+    iteratee: ResourceIteratee<CobaltPentest>,
   ): Promise<void> {
     // TODO paginate an endpoint, invoke the iteratee with each record in the
     // page
@@ -218,12 +218,12 @@ export class APIClient {
     // the page, invoke the `ResourceIteratee`. This will encourage a pattern
     // where each resource is processed and dropped from memory.
 
-    const findings: CobaltFinding[] = await this.contactAPI(
-      'https://api.cobalt.io/findings',
+    const pentests: CobaltPentest[] = await this.contactAPI(
+      'https://api.cobalt.io/pentests',
     );
 
-    for (const finding of findings) {
-      await iteratee(finding);
+    for (const pentest of pentests) {
+      await iteratee(pentest);
     }
   }
 
