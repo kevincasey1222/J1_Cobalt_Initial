@@ -20,9 +20,14 @@ Please provide information about the steps needed to create an account with a
 provider. Images and references to a provider's documentation is very helpful
 for new developers picking up your work.
 
+https://app.swaggerhub.com/apis/CobaltLab/Cobalt_Public_API/1.0.0#/
+
 ## Authentication
 
 Supply details here for information on how to authenticate with a provider so
 that developers have an idea of what's needed to hit APIs. It may be useful to
 provide explanations for each value specified in
 [../src/instanceConfigFields.json](../src/instanceConfigFields.json).
+
+apiKeyAuth is used to authenticate to the org orgToken is used to get anything
+more detailed than /orgs (eg. /findings, /pentests, etc)

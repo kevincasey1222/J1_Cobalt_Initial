@@ -5,7 +5,7 @@ import {
   IntegrationStep,
   IntegrationStepExecutionContext,
   RelationshipClass,
-  IntegrationMissingKeyError,
+  //IntegrationMissingKeyError,
 } from '@jupiterone/integration-sdk-core';
 
 import { createAPIClient } from '../client';
@@ -21,30 +21,35 @@ export async function fetchFindings({
   const accountEntity = (await jobState.getData(DATA_ACCOUNT_ENTITY)) as Entity;
 
   await apiClient.iterateFindings(async (finding) => {
-    const userEntity = await jobState.addEntity(
+    const findingProps = finding.resource;
+    const findingEntity = await jobState.addEntity(
       createIntegrationEntity({
         entityData: {
           source: finding,
           assign: {
             _type: 'cobalt_finding',
             _class: 'Finding',
-            _key: finding.id,
-            tag: finding.tag,
-            name: finding.title,
-            displayName: finding.title,
-            description: finding.description,
-            typeCategory: finding.type_category,
-            labels: JSON.stringify(finding.labels),
-            impact: finding.impact,
-            likelihood: finding.likelihood,
-            state: finding.state,
-            affectedTargets: JSON.stringify(finding.affected_targets),
-            proofOfConcept: finding.proof_of_concept,
-            suggestedFix: finding.suggested_fix,
-            prerequisites: finding.prerequisites,
-            pentestID: finding.pentest_id,
-            assetID: finding.asset_id,
-            log: JSON.stringify(finding.log),
+            _key: findingProps.id,
+            tag: findingProps.tag,
+            name: findingProps.title,
+            displayName: findingProps.title,
+            description: findingProps.description,
+            typeCategory: findingProps.type_category,
+            labels: JSON.stringify(findingProps.labels, null, 2),
+            impact: findingProps.impact,
+            likelihood: findingProps.likelihood,
+            state: findingProps.state,
+            affectedTargets: JSON.stringify(
+              findingProps.affected_targets,
+              null,
+              2,
+            ),
+            proofOfConcept: findingProps.proof_of_concept,
+            suggestedFix: findingProps.suggested_fix,
+            prerequisites: findingProps.prerequisites,
+            pentestID: findingProps.pentest_id,
+            assetID: findingProps.asset_id,
+            log: JSON.stringify(findingProps.log, null, 2),
           },
         },
       }),
@@ -54,97 +59,32 @@ export async function fetchFindings({
       createDirectRelationship({
         _class: RelationshipClass.HAS,
         from: accountEntity,
-        to: userEntity,
+        to: findingEntity,
       }),
     );
   });
 }
 
-export async function fetchGroups({
-  instance,
-  jobState,
-}: IntegrationStepExecutionContext<IntegrationConfig>) {
-  const apiClient = createAPIClient(instance.config);
-
-  const accountEntity = (await jobState.getData(DATA_ACCOUNT_ENTITY)) as Entity;
-
-  await apiClient.iterateGroups(async (group) => {
-    const groupEntity = await jobState.addEntity(
-      createIntegrationEntity({
-        entityData: {
-          source: group,
-          assign: {
-            _type: 'acme_group',
-            _class: 'UserGroup',
-            email: 'testgroup@test.com',
-            // This is a custom property that is not a part of the data model class
-            // hierarchy. See: https://github.com/JupiterOne/data-model/blob/master/src/schemas/UserGroup.json
-            logoLink: 'https://test.com/logo.png',
-          },
-        },
-      }),
-    );
-
-    await jobState.addRelationship(
-      createDirectRelationship({
-        _class: RelationshipClass.HAS,
-        from: accountEntity,
-        to: groupEntity,
-      }),
-    );
-
-    for (const user of group.users || []) {
-      const userEntity = await jobState.findEntity(user.id);
-
-      if (!userEntity) {
-        throw new IntegrationMissingKeyError(
-          `Expected user with key to exist (key=${user.id})`,
-        );
-      }
-
-      await jobState.addRelationship(
-        createDirectRelationship({
-          _class: RelationshipClass.HAS,
-          from: groupEntity,
-          to: userEntity,
-        }),
-      );
-    }
-  });
-}
-
-export const accessSteps: IntegrationStep<IntegrationConfig>[] = [
+export const findingSteps: IntegrationStep<IntegrationConfig>[] = [
   {
-    id: 'fetch-users',
-    name: 'Fetch Users',
+    id: 'fetch-findings',
+    name: 'Fetch Findings',
     entities: [
       {
-        resourceName: 'Account',
-        _type: 'acme_account',
-        _class: 'Account',
+        resourceName: 'Cobalt Finding',
+        _type: 'cobalt_finding',
+        _class: 'Finding',
       },
     ],
     relationships: [
       {
-        _type: 'acme_account_has_user',
+        _type: 'cobalt_account_has_finding',
         _class: RelationshipClass.HAS,
-        sourceType: 'acme_account',
-        targetType: 'acme_user',
-      },
-      {
-        _type: 'acme_account_has_group',
-        _class: RelationshipClass.HAS,
-        sourceType: 'acme_account',
-        targetType: 'acme_group',
-      },
-      {
-        _type: 'acme_group_has_user',
-        _class: RelationshipClass.HAS,
-        sourceType: 'acme_group',
-        targetType: 'acme_user',
+        sourceType: 'cobalt_account',
+        targetType: 'cobalt_finding',
       },
     ],
-    dependsOn: ['fetch-account'],
-    executionHandler: fetchUsers,
+    dependsOn: ['fetch-pentests'],
+    executionHandler: fetchFindings,
   },
 ];

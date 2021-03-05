@@ -5,7 +5,6 @@ import {
 } from '@jupiterone/integration-sdk-core';
 
 import { IntegrationConfig } from '../types';
-import { createAPIClient } from '../client';
 
 export const DATA_ACCOUNT_ENTITY = 'DATA_ACCOUNT_ENTITY';
 
@@ -13,9 +12,7 @@ export async function fetchAccountDetails({
   jobState,
   instance,
 }: IntegrationStepExecutionContext<IntegrationConfig>) {
-  const apiClient = createAPIClient(instance.config);
-  const acctInfo = await apiClient.getAccountInfo();
-  const name = `Cobalt - ${acctInfo.name} - ${instance.name}`;
+  const name = `Cobalt - ${instance.name}`;
   const accountEntity = await jobState.addEntity(
     createIntegrationEntity({
       entityData: {
@@ -43,7 +40,7 @@ export const accountSteps: IntegrationStep<IntegrationConfig>[] = [
     name: 'Fetch Account Details',
     entities: [
       {
-        resourceName: 'Account',
+        resourceName: 'Cobalt Account',
         _type: 'cobalt_account',
         _class: 'Account',
       },
