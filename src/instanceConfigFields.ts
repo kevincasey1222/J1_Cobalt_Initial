@@ -19,10 +19,6 @@ const instanceConfigFields: IntegrationInstanceConfigFieldMap = {
     type: 'string',
     mask: true,
   },
-  orgToken: {
-    type: 'string',
-    mask: true,
-  },
 };
 
 export default instanceConfigFields;

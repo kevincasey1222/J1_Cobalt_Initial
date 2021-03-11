@@ -53,30 +53,6 @@ type CobaltPentest = {
   };
 };
 
-type AcmeUser = {
-  id: string;
-  name: string;
-};
-
-type AcmeGroup = {
-  id: string;
-  name: string;
-  users?: Pick<AcmeUser, 'id'>[];
-};
-
-// Those can be useful to a degree, but often they're just full of optional
-// values. Understanding the response data may be more reliably accomplished by
-// reviewing the API response recordings produced by testing the wrapper client
-// (below). However, when there are no types provided, it is necessary to define
-// opaque types for each resource, to communicate the records that are expected
-// to come from an endpoint and are provided to iterating functions.
-
-/*
-import { Opaque } from 'type-fest';
-export type AcmeUser = Opaque<any, 'AcmeUser'>;
-export type AcmeGroup = Opaque<any, 'AcmeGroup'>;
-*/
-
 /**
  * An APIClient maintains authentication state and provides an interface to
  * third party data APIs.
@@ -88,6 +64,8 @@ export type AcmeGroup = Opaque<any, 'AcmeGroup'>;
 export class APIClient {
   constructor(readonly config: IntegrationConfig) {}
 
+  orgToken: '';
+
   getClient(): AxiosInstance {
     const client = axios.create({
       headers: {
@@ -95,7 +73,7 @@ export class APIClient {
           client: 'JupiterOne-Cobalt Integration client',
           'Content-Type': 'application/json',
           Authorization: `Bearer ${this.config.apiKeyAuth}`,
-          'X-Org-Token': this.config.orgToken,
+          'X-Org-Token': this.orgToken || '',
         },
       },
     });
@@ -107,71 +85,6 @@ export class APIClient {
     // authentication works with the provided credentials, throw an err if
     // authentication fails
     return await this.contactAPI('https://api.cobalt.io/orgs');
-  }
-
-  /**
-   * Iterates each user resource in the provider.
-   *
-   * @param iteratee receives each resource to produce entities/relationships
-   */
-  public async iterateUsers(
-    iteratee: ResourceIteratee<AcmeUser>,
-  ): Promise<void> {
-    // TODO paginate an endpoint, invoke the iteratee with each record in the
-    // page
-    //
-    // The provider API will hopefully support pagination. Functions like this
-    // should maintain pagination state, and for each page, for each record in
-    // the page, invoke the `ResourceIteratee`. This will encourage a pattern
-    // where each resource is processed and dropped from memory.
-
-    const users: AcmeUser[] = [
-      {
-        id: 'acme-user-1',
-        name: 'User One',
-      },
-      {
-        id: 'acme-user-2',
-        name: 'User Two',
-      },
-    ];
-
-    for (const user of users) {
-      await iteratee(user);
-    }
-  }
-
-  /**
-   * Iterates each group resource in the provider.
-   *
-   * @param iteratee receives each resource to produce entities/relationships
-   */
-  public async iterateGroups(
-    iteratee: ResourceIteratee<AcmeGroup>,
-  ): Promise<void> {
-    // TODO paginate an endpoint, invoke the iteratee with each record in the
-    // page
-    //
-    // The provider API will hopefully support pagination. Functions like this
-    // should maintain pagination state, and for each page, for each record in
-    // the page, invoke the `ResourceIteratee`. This will encourage a pattern
-    // where each resource is processed and dropped from memory.
-
-    const groups: AcmeGroup[] = [
-      {
-        id: 'acme-group-1',
-        name: 'Group One',
-        users: [
-          {
-            id: 'acme-user-1',
-          },
-        ],
-      },
-    ];
-
-    for (const group of groups) {
-      await iteratee(group);
-    }
   }
 
   /**
@@ -251,22 +164,69 @@ export class APIClient {
 
   public async contactAPI(url, params?) {
     let reply;
+    if (this.orgToken == '') {
+      this.updateOrgToken();
+    }
     try {
       reply = await this.getClient().get(url, params);
       if (reply.status != 200) {
-        throw new IntegrationProviderAuthenticationError({
-          endpoint: url,
-          status: reply.status,
-          statusText: `Received HTTP status ${reply.status}`,
-        });
+        //maybe token expired
+        this.updateOrgToken();
+        //try once more
+        reply = await this.getClient().get(url, params);
+        if (reply.status != 200) {
+          //we're getting a reply, but it's not a useful one
+          throw new IntegrationProviderAuthenticationError({
+            endpoint: url,
+            status: reply.status,
+            statusText: `Received HTTP status ${reply.status} while fetching ${url}`,
+          });
+        }
       }
       return reply.data.data;
     } catch (err) {
+      //maybe token expired
+      this.updateOrgToken();
+      //try once more
+      reply = await this.getClient().get(url, params);
+      if (reply.status != 200) {
+        //we're getting a reply, but it's not a useful one
+        throw new IntegrationProviderAuthenticationError({
+          endpoint: url,
+          status: reply.status,
+          statusText: `Received HTTP status ${reply.status} while fetching ${url}`,
+        });
+      }
+      //no, something really blew up. Just throw a general error.
       throw new IntegrationProviderAuthenticationError({
         cause: err,
         endpoint: url,
-        status: err.status,
-        statusText: err.statusText,
+        status: err.response.status,
+        statusText: err.response,
+      });
+    }
+  }
+
+  //there are two reasons we might need an orgToken - either we never got it, or it expired
+  public async updateOrgToken() {
+    try {
+      const tokenSearch = await this.getClient().get(
+        'https://api.cobalt.io/orgs',
+      );
+      if (tokenSearch.status != 200) {
+        throw new IntegrationProviderAuthenticationError({
+          endpoint: 'https://api.cobalt.io/orgs',
+          status: tokenSearch.status,
+          statusText: `Received HTTP status ${tokenSearch.status} while trying to update token. Please check API_KEY_AUTH.`,
+        });
+      }
+      this.orgToken = tokenSearch.data.data[0].resource.token;
+    } catch (err) {
+      throw new IntegrationProviderAuthenticationError({
+        cause: err,
+        endpoint: `Failed to update token from https://api.cobalt.io/orgs. Please check API_KEY_AUTH.`,
+        status: err.response.status,
+        statusText: err.response,
       });
     }
   }

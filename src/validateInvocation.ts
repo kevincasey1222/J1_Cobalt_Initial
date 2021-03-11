@@ -11,10 +11,8 @@ export default async function validateInvocation(
 ) {
   const { config } = context.instance;
 
-  if (!config.apiKeyAuth || !config.orgToken) {
-    throw new IntegrationValidationError(
-      'Config requires all of {apiKeyAuth, orgToken}',
-    );
+  if (!config.apiKeyAuth) {
+    throw new IntegrationValidationError('Config requires all of {apiKeyAuth}');
   }
 
   const apiClient = createAPIClient(config);

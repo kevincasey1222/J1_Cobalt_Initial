@@ -9,9 +9,4 @@ export interface IntegrationConfig extends IntegrationInstanceConfig {
    * The provider API apiKeyAuth used to authenticate requests.
    */
   apiKeyAuth: string;
-
-  /**
-   * The provider API orgToken used to authenticate requests.
-   */
-  orgToken: string;
 }

@@ -20,19 +20,47 @@ export async function fetchAssets({
   const accountEntity = (await jobState.getData(DATA_ACCOUNT_ENTITY)) as Entity;
   await apiClient.iterateAssets(async (asset) => {
     const assetProps = asset.resource;
-    var classAssigned: string;
-    if (assetProps.asset_type == 'API' || assetProps.asset_type == 'api') {
-      classAssigned = 'ApplicationEndpoint';
-    } else {
-      classAssigned = 'Application';
-    } // just a stub here... need specific decisions
+    let classesAssigned: string[] = [];
+    switch (assetProps.asset_type) {
+      case 'Web':
+        classesAssigned.push('Application');
+        break;
+      case 'Mobile':
+        classesAssigned.push('Application');
+        break;
+      case 'API':
+        classesAssigned.push('ApplicationEndpoint');
+        break;
+      case 'External Network':
+        classesAssigned.push('Network');
+        break;
+      case 'Cloud Config':
+        classesAssigned.push('Configuration');
+        break;
+      case 'Internal Network':
+        classesAssigned.push('Network');
+        break;
+      case 'Web+API':
+        classesAssigned.push('Application');
+        classesAssigned.push('ApplicationEndpoint');
+        break;
+      case 'Web+External Network':
+        classesAssigned.push('Application');
+        classesAssigned.push('Network');
+        break;
+      case 'Web+Mobile':
+        classesAssigned.push('Application');
+        break;
+      default:
+        classesAssigned.push('Application');
+    }
     const userEntity = await jobState.addEntity(
       createIntegrationEntity({
         entityData: {
           source: asset,
           assign: {
             _type: 'cobalt_asset',
-            _class: classAssigned,
+            _class: classesAssigned,
             _key: assetProps.id,
             name: assetProps.title,
             displayName: assetProps.title,
@@ -64,25 +92,28 @@ export const assetSteps: IntegrationStep<IntegrationConfig>[] = [
         _type: 'cobalt_asset',
         _class: 'Application',
       },
+      {
+        resourceName: 'Cobalt Asset',
+        _type: 'cobalt_asset',
+        _class: 'ApplicationEndpoint',
+      },
+      {
+        resourceName: 'Cobalt Asset',
+        _type: 'cobalt_asset',
+        _class: 'Network',
+      },
+      {
+        resourceName: 'Cobalt Asset',
+        _type: 'cobalt_asset',
+        _class: 'Configuration',
+      },
     ],
     relationships: [
       {
-        _type: 'acme_account_has_user',
+        _type: 'cobalt_account_has_asset',
         _class: RelationshipClass.HAS,
-        sourceType: 'acme_account',
-        targetType: 'acme_user',
-      },
-      {
-        _type: 'acme_account_has_group',
-        _class: RelationshipClass.HAS,
-        sourceType: 'acme_account',
-        targetType: 'acme_group',
-      },
-      {
-        _type: 'acme_group_has_user',
-        _class: RelationshipClass.HAS,
-        sourceType: 'acme_group',
-        targetType: 'acme_user',
+        sourceType: 'cobalt_account',
+        targetType: 'cobalt_asset',
       },
     ],
     dependsOn: ['fetch-account'],
