@@ -73,7 +73,7 @@ export class APIClient {
           client: 'JupiterOne-Cobalt Integration client',
           'Content-Type': 'application/json',
           Authorization: `Bearer ${this.config.apiKeyAuth}`,
-          'X-Org-Token': this.orgToken || '',
+          'X-Org-Token': this.orgToken || 'MzExOSQkdGVzdC1vcmctYXBp',
         },
       },
     });

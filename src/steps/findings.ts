@@ -34,11 +34,15 @@ export async function fetchFindings({
             name: findingProps.title,
             displayName: findingProps.title,
             description: findingProps.description,
+            category: findingProps.type_category, //required property in J1 Finding
             typeCategory: findingProps.type_category,
             labels: JSON.stringify(findingProps.labels, null, 2),
-            impact: findingProps.impact,
+            impact: JSON.stringify(findingProps.impact), //required to be a string in J1 Finding
+            severity: JSON.stringify(findingProps.impact), //required property in J1 Finding
+            numericSeverity: findingProps.impact, //required property in J1 Finding
             likelihood: findingProps.likelihood,
             state: findingProps.state,
+            open: true, //required property in J1 Finding
             affectedTargets: JSON.stringify(
               findingProps.affected_targets,
               null,

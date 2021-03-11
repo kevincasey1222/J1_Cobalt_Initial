@@ -83,6 +83,7 @@ The following entities are created:
 | Resources      | Entity `_type`   | Entity `_class` |
 | -------------- | ---------------- | --------------- |
 | Cobalt Account | `cobalt_account` | `Account`       |
+| Cobalt Asset   | `cobalt_asset`   | `Application`   |
 | Cobalt Finding | `cobalt_finding` | `Finding`       |
 | Cobalt Pentest | `cobalt_pentest` | `Assessment`    |
 
@@ -92,6 +93,7 @@ The following relationships are created/mapped:
 
 | Source Entity `_type` | Relationship `_class` | Target Entity `_type` |
 | --------------------- | --------------------- | --------------------- |
+| `cobalt_account`      | **HAS**               | `cobalt_asset`        |
 | `cobalt_account`      | **HAS**               | `cobalt_finding`      |
 | `cobalt_account`      | **HAS**               | `cobalt_pentest`      |
 
