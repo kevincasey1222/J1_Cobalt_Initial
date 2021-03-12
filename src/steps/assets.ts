@@ -53,7 +53,7 @@ export async function fetchAssets({
       default:
         classesAssigned.push('Application');
     }
-    const userEntity = await jobState.addEntity(
+    const assetEntity = await jobState.addEntity(
       createIntegrationEntity({
         entityData: {
           source: asset,
@@ -75,7 +75,7 @@ export async function fetchAssets({
       createDirectRelationship({
         _class: RelationshipClass.HAS,
         from: accountEntity,
-        to: userEntity,
+        to: assetEntity,
       }),
     );
   });

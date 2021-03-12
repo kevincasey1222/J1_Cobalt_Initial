@@ -97,8 +97,9 @@ The following relationships are created/mapped:
 | --------------------- | --------------------- | --------------------- |
 | `cobalt_account`      | **HAS**               | `cobalt_asset`        |
 | `cobalt_account`      | **HAS**               | `cobalt_finding`      |
-| `cobalt_account`      | **HAS**               | `cobalt_pentest`      |
 | `cobalt_account`      | **HAS**               | `cobalt_service`      |
+| `cobalt_service`      | **PERFORMED**         | `cobalt_pentest`      |
+| `cobalt_vendor`       | **PERFORMED**         | `cobalt_pentest`      |
 | `cobalt_vendor`       | **PROVIDES**          | `cobalt_service`      |
 
 <!--

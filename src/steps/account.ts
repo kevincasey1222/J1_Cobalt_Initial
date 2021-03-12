@@ -9,6 +9,8 @@ import {
 import { IntegrationConfig } from '../types';
 
 export const DATA_ACCOUNT_ENTITY = 'DATA_ACCOUNT_ENTITY';
+export const SERVICE_ENTITY_KEY = 'cobalt-pentest-service';
+export const VENDOR_ENTITY_KEY = 'cobalt-vendor';
 
 export async function fetchAccountDetails({
   jobState,
@@ -39,10 +41,10 @@ export async function fetchAccountDetails({
       entityData: {
         source: {
           id: 'Cobalt',
-          name: 'Cobalt',
+          name: 'Cobalt Vendor',
         },
         assign: {
-          _key: `cobalt-vendor`,
+          _key: VENDOR_ENTITY_KEY,
           _type: 'cobalt_vendor',
           _class: 'Vendor',
           name: 'Cobalt',
@@ -61,7 +63,7 @@ export async function fetchAccountDetails({
           name: 'Cobalt pentest service',
         },
         assign: {
-          _key: `cobalt-pentest-service`,
+          _key: SERVICE_ENTITY_KEY,
           _type: 'cobalt_service',
           _class: 'Service',
           name: 'Cobalt pentest service',
