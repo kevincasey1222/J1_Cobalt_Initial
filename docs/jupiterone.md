@@ -80,12 +80,14 @@ https://github.com/JupiterOne/sdk/blob/master/docs/integrations/development.md
 
 The following entities are created:
 
-| Resources      | Entity `_type`   | Entity `_class` |
-| -------------- | ---------------- | --------------- |
-| Cobalt Account | `cobalt_account` | `Account`       |
-| Cobalt Asset   | `cobalt_asset`   | `Application`   |
-| Cobalt Finding | `cobalt_finding` | `Finding`       |
-| Cobalt Pentest | `cobalt_pentest` | `Assessment`    |
+| Resources              | Entity `_type`   | Entity `_class` |
+| ---------------------- | ---------------- | --------------- |
+| Cobalt                 | `cobalt_vendor`  | `Vendor`        |
+| Cobalt Account         | `cobalt_account` | `Account`       |
+| Cobalt Asset           | `cobalt_asset`   | `Application`   |
+| Cobalt Finding         | `cobalt_finding` | `Finding`       |
+| Cobalt Pentest         | `cobalt_pentest` | `Assessment`    |
+| Cobalt pentest service | `cobalt_service` | `Service`       |
 
 ### Relationships
 
@@ -96,6 +98,8 @@ The following relationships are created/mapped:
 | `cobalt_account`      | **HAS**               | `cobalt_asset`        |
 | `cobalt_account`      | **HAS**               | `cobalt_finding`      |
 | `cobalt_account`      | **HAS**               | `cobalt_pentest`      |
+| `cobalt_account`      | **HAS**               | `cobalt_service`      |
+| `cobalt_vendor`       | **PROVIDES**          | `cobalt_service`      |
 
 <!--
 ********************************************************************************

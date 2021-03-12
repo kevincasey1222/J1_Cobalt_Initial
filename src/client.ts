@@ -56,15 +56,20 @@ type CobaltPentest = {
 /**
  * An APIClient maintains authentication state and provides an interface to
  * third party data APIs.
- *
- * It is recommended that integrations wrap provider data APIs to provide a
- * place to handle error responses and implement common patterns for iterating
- * resources.
  */
 export class APIClient {
-  constructor(readonly config: IntegrationConfig) {}
+  #orgToken: string;
+  constructor(readonly config: IntegrationConfig) {
+    this.#orgToken = '';
+  }
 
-  orgToken: '';
+  getOrgToken(): string {
+    return this.#orgToken;
+  }
+
+  setOrgToken(orgToken: string) {
+    this.#orgToken = orgToken;
+  }
 
   getClient(): AxiosInstance {
     const client = axios.create({
@@ -73,7 +78,7 @@ export class APIClient {
           client: 'JupiterOne-Cobalt Integration client',
           'Content-Type': 'application/json',
           Authorization: `Bearer ${this.config.apiKeyAuth}`,
-          'X-Org-Token': this.orgToken || 'MzExOSQkdGVzdC1vcmctYXBp',
+          'X-Org-Token': this.getOrgToken(),
         },
       },
     });
@@ -164,17 +169,17 @@ export class APIClient {
 
   public async contactAPI(url, params?) {
     let reply;
-    if (this.orgToken == '') {
-      this.updateOrgToken();
+    if (this.getOrgToken() === '') {
+      await this.updateOrgToken();
     }
     try {
       reply = await this.getClient().get(url, params);
-      if (reply.status != 200) {
+      if (reply.status !== 200) {
         //maybe token expired
-        this.updateOrgToken();
+        await this.updateOrgToken();
         //try once more
         reply = await this.getClient().get(url, params);
-        if (reply.status != 200) {
+        if (reply.status !== 200) {
           //we're getting a reply, but it's not a useful one
           throw new IntegrationProviderAuthenticationError({
             endpoint: url,
@@ -186,7 +191,7 @@ export class APIClient {
       return reply.data.data;
     } catch (err) {
       //maybe token expired
-      this.updateOrgToken();
+      await this.updateOrgToken();
       //try once more
       reply = await this.getClient().get(url, params);
       if (reply.status != 200) {
@@ -220,7 +225,7 @@ export class APIClient {
           statusText: `Received HTTP status ${tokenSearch.status} while trying to update token. Please check API_KEY_AUTH.`,
         });
       }
-      this.orgToken = tokenSearch.data.data[0].resource.token;
+      this.setOrgToken(tokenSearch.data.data[0].resource.token);
     } catch (err) {
       throw new IntegrationProviderAuthenticationError({
         cause: err,
