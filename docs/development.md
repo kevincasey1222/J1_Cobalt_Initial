@@ -1,5 +1,8 @@
 # Development
 
+Cobalt REST API:
+https://app.swaggerhub.com/apis/CobaltLab/Cobalt_Public_API/1.3.0
+
 Add details here to give a brief overview of how to work with the provider APIs.
 Please reference any SDKs or API docs used to help build the integration here.
 
@@ -29,5 +32,5 @@ that developers have an idea of what's needed to hit APIs. It may be useful to
 provide explanations for each value specified in
 [../src/instanceConfigFields.json](../src/instanceConfigFields.json).
 
-apiKeyAuth is used to authenticate to the org orgToken is used to get anything
+apiKeyAuth is used to authenticate to the org, orgToken is used to get anything
 more detailed than /orgs (eg. /findings, /pentests, etc)

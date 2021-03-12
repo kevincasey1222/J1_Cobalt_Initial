@@ -1,9 +1,6 @@
 # Integration with JupiterOne
 
-## {{provider}} + JupiterOne Integration Benefits
-
-TODO: Iterate the benefits of ingesting data from the provider into JupiterOne.
-Consider the following examples:
+## Cobalt + JupiterOne Integration Benefits
 
 - Visualize Cobalt pentests, findings, and the assets tested in the JupiterOne
   graph.
@@ -22,7 +19,7 @@ Consider the following examples:
 TODO: Iterate requirements for setting up the integration. Consider the
 following examples:
 
-- You will need both a REST API key and an organizational token from Cobalt.
+- You will a REST API key from Cobalt.
 - You must have permission in JupiterOne to install new integrations.
 
 ## Support
