@@ -31,7 +31,7 @@ export async function fetchFindings({
             name: findingProps.title,
             displayName: findingProps.title,
             description: findingProps.description,
-            category: findingProps.type_category, //required property in J1 Finding
+            category: 'Penetration Testing',
             typeCategory: findingProps.type_category,
             labels: JSON.stringify(findingProps.labels, null, 2),
             impact: JSON.stringify(findingProps.impact, null, 2), //required to be a string in J1 Finding
@@ -49,7 +49,7 @@ export async function fetchFindings({
             suggestedFix: findingProps.suggested_fix,
             prerequisites: findingProps.prerequisites,
             pentestID: findingProps.pentest_id, //value of pentest Assessment _key
-            assetID: findingProps.asset_id, // value of asset _key (which could be Application or something else)
+            assetID: findingProps.asset_id, // value of asset _key (which could be class Application or something else)
             log: JSON.stringify(findingProps.log, null, 2),
           },
         },

@@ -16,10 +16,7 @@
 
 ## Requirements
 
-TODO: Iterate requirements for setting up the integration. Consider the
-following examples:
-
-- You will a REST API key from Cobalt.
+- You must have an API token from Cobalt.
 - You must have permission in JupiterOne to install new integrations.
 
 ## Support
@@ -31,10 +28,12 @@ If you need help with this integration, please contact
 
 ### In Cobalt
 
-TODO: List specific actions that must be taken in the provider. Remove this
-section when there are no actions to take in the provider.
-
-1. [Generate a REST API key](https://example.com/docs/generating-api-keys)
+1. Sign in to your [Cobalt account](https://app.cobalt.io/users/sign_in).
+2. Under your profile (top right corner of page), go to [API
+   Token].(https://app.cobalt.io/settings/api-token)
+3. Press Generate Token
+4. Copy the token locally, because you won't be able to copy it after you leave
+   this page.
 
 ### In JupiterOne
 
@@ -48,9 +47,8 @@ section when there are no actions to take in the provider.
    the integration instance.
 6. Select a **Polling Interval** that you feel is sufficient for your monitoring
    needs. You may leave this as `DISABLED` and manually execute the integration.
-7. Enter your **Cobalt API Key**.
-8. Enter your **Cobalt Org Token**.
-9. Click **Create Configuration** once all values are provided.
+7. Enter your **Cobalt API Key** that you got from Generate Token above.
+8. Click **Create Configuration** once all values are provided.
 
 # How to Uninstall
 
