@@ -1,7 +1,6 @@
 import {
   createDirectRelationship,
   createIntegrationEntity,
-  Entity,
   IntegrationStep,
   IntegrationStepExecutionContext,
   RelationshipClass,
@@ -10,6 +9,7 @@ import {
 
 import { createAPIClient } from '../client';
 import { IntegrationConfig } from '../types';
+import { getVulnerabilityLink, getVulnerabilityNumber } from '../util';
 
 export async function fetchFindings({
   instance,
@@ -86,16 +86,42 @@ export async function fetchFindings({
       );
     } //if assetEntity does not exist, just move on
 
-    // regex the finding description field for a possible identified vulnerability
-    // in a future version, the CVE / CWE number could be an actual schema item from the Finding API
-    // This is experimental. Examples of CVE/CWE links:
-    // https://cwe.mitre.org/data/definitions/307.html
-    // https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-2138
-    if (
-      /https?:\/\/(cwe.mitre.org|cve.mitre.org)/.test(findingProps.description)
-    ) {
-      //we might have a CWE or CVE here, because someone placed a link to the mitre site in the description
-      // TODO : implement CVE/CWE detection and add Vulnerability object here
+    const vulnLink: string = getVulnerabilityLink(findingProps.description);
+    if (!(vulnLink === 'none')) {
+      //we have detected a link to a CVE or CWE in the description, so let's make a Vulnerability object
+      const vulnNumber = getVulnerabilityNumber(vulnLink);
+      const vulnerabilityEntity = await jobState.addEntity(
+        createIntegrationEntity({
+          entityData: {
+            source: {
+              name: vulnNumber,
+              link: vulnLink,
+            },
+            assign: {
+              _type: 'cobalt_vulnerability',
+              _class: 'Vulnerability',
+              _key: vulnNumber,
+              name: vulnNumber,
+              displayName: vulnNumber,
+              category: 'application',
+              webLink: vulnLink,
+              severity: 'unknown',
+              blocking: false,
+              open: true,
+              production: true,
+              public: true,
+            },
+          },
+        }),
+      );
+
+      await jobState.addRelationship(
+        createDirectRelationship({
+          _class: RelationshipClass.IS,
+          from: findingEntity,
+          to: vulnerabilityEntity,
+        }),
+      );
     }
   });
 }
