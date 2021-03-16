@@ -156,12 +156,22 @@ describe('testing regex extraction of URLs from pentest descriptions', () => {
       'CVE-2021-2138',
     );
   });
+
+  test('recognize some link and number from a mash of links', () => {
+    const input =
+      "Your vulnerability is basically https://nvd.nist.gov/vuln/detail/CVE-2021-2138, unless it's also https://cwe.mitre.org/data/definitions/307.html or maybe you should just google https://www.google.com okay?";
+    expect(getVulnerabilityLink(input)).toBe(
+      'https://nvd.nist.gov/vuln/detail/CVE-2021-2138',
+    );
+    expect(getVulnerabilityNumber(getVulnerabilityLink(input))).toBe(
+      'CVE-2021-2138',
+    );
+  });
 });
 //more tests todo:
 //build in recording, with appropriate redaction, take out real API key
 
-//validate regex url scraper
-//end of of word marker to regex for urls so we don't get multiple in one match
 //validate bad token handling and refresh process
 //consider - should be just discard a finding without a pentest? Right now throws error
-//update snapshots when ready
+
+//check on byval vs byref in assets.resource.attachments
