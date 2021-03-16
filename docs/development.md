@@ -27,7 +27,7 @@ The API is read-only. To use it manually from Swagger:
    copy it), you can head to
    [Swagger](https://app.swaggerhub.com/apis/CobaltLab/Cobalt_Public_API/1.3.0).
 3. Make sure to point to Production (https://api.cobalt.io) from the drop-down
-4. Authorize with your API token in the API_AUTH_KEY field.
+4. Authorize with your API token in the API_KEY_AUTH field.
 5. Eexecute the /orgs endpoint via the Execute button on the API page.
 6. Note the organization token.
 7. Return back to the Authorize section and add the org token and Authorize that
@@ -43,7 +43,7 @@ To use the API via code:
 2. Copy the API key locally once it is displayed, because you won't be able to
    after you leave the generation page.
 3. Execute https://api.cobalt.io/orgs with a header included of
-   `'Authorization': 'Bearer API_AUTH_KEY'`, where API_AUTH_KEY is what you made
+   `'Authorization': 'Bearer API_KEY_AUTH'`, where API_KEY_AUTH is what you made
    on step one.
 4. The reply object will include `data.data[0].resource.token`, which is a
    string for your orgToken.

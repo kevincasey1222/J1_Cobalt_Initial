@@ -1,15 +1,17 @@
 import { createMockStepExecutionContext } from '@jupiterone/integration-sdk-testing';
 
 import { IntegrationConfig } from '../types';
-import { fetchGroups, fetchUsers } from './access';
 import { fetchAccountDetails } from './account';
+import { fetchFindings } from './findings';
+import { fetchPentests } from './pentests';
+import { fetchAssets } from './assets';
+import { getVulnerabilityLink, getVulnerabilityNumber } from '../util';
 
-const DEFAULT_CLIENT_ID = 'dummy-acme-client-id';
-const DEFAULT_CLIENT_SECRET = 'dummy-acme-client-secret';
+//const DEFAULT_API_KEY = 'dummy-api-key';
 
 const integrationConfig: IntegrationConfig = {
-  clientId: process.env.CLIENT_ID || DEFAULT_CLIENT_ID,
-  clientSecret: process.env.CLIENT_SECRET || DEFAULT_CLIENT_SECRET,
+  apiKeyAuth:
+    process.env.API_KEY_AUTH || 'L17FtgVqScP4tRsHcHGumU8eD7KZLHuqiMGtebir', //DEFAULT_API_KEY,
 };
 
 test('should collect data', async () => {
@@ -20,8 +22,9 @@ test('should collect data', async () => {
   // Simulates dependency graph execution.
   // See https://github.com/JupiterOne/sdk/issues/262.
   await fetchAccountDetails(context);
-  await fetchUsers(context);
-  await fetchGroups(context);
+  await fetchAssets(context);
+  await fetchPentests(context);
+  await fetchFindings(context);
 
   // Review snapshot, failure is a regression
   expect({
@@ -39,60 +42,104 @@ test('should collect data', async () => {
   expect(accounts).toMatchGraphObjectSchema({
     _class: ['Account'],
     schema: {
-      additionalProperties: false,
       properties: {
-        _type: { const: 'acme_account' },
-        manager: { type: 'string' },
+        _type: { const: 'cobalt_account' },
         _rawData: {
           type: 'array',
           items: { type: 'object' },
         },
       },
-      required: ['manager'],
+      required: [],
     },
   });
 
-  const users = context.jobState.collectedEntities.filter((e) =>
-    e._class.includes('User'),
+  const vendors = context.jobState.collectedEntities.filter((e) =>
+    e._class.includes('Vendor'),
   );
-  expect(users.length).toBeGreaterThan(0);
-  expect(users).toMatchGraphObjectSchema({
-    _class: ['User'],
+  expect(vendors.length).toBeGreaterThan(0);
+  expect(vendors).toMatchGraphObjectSchema({
+    _class: ['Vendor'],
     schema: {
-      additionalProperties: false,
       properties: {
-        _type: { const: 'acme_user' },
-        firstName: { type: 'string' },
+        _type: { const: 'cobalt_vendor' },
         _rawData: {
           type: 'array',
           items: { type: 'object' },
         },
       },
-      required: ['firstName'],
+      required: [],
     },
   });
 
-  const userGroups = context.jobState.collectedEntities.filter((e) =>
-    e._class.includes('UserGroup'),
+  const services = context.jobState.collectedEntities.filter((e) =>
+    e._class.includes('Service'),
   );
-  expect(userGroups.length).toBeGreaterThan(0);
-  expect(userGroups).toMatchGraphObjectSchema({
-    _class: ['UserGroup'],
+  expect(services.length).toBeGreaterThan(0);
+  expect(services).toMatchGraphObjectSchema({
+    _class: ['Service'],
     schema: {
-      additionalProperties: false,
       properties: {
-        _type: { const: 'acme_group' },
-        logoLink: {
-          type: 'string',
-          // Validate that the `logoLink` property has a URL format
-          format: 'url',
-        },
+        _type: { const: 'cobalt_service' },
         _rawData: {
           type: 'array',
           items: { type: 'object' },
         },
       },
-      required: ['logoLink'],
+      required: [],
+    },
+  });
+
+  const pentests = context.jobState.collectedEntities.filter((e) =>
+    e._class.includes('Assessment'),
+  );
+  expect(pentests).toMatchGraphObjectSchema({
+    _class: ['Assessment'],
+    schema: {
+      properties: {
+        _type: { const: 'cobalt_pentest' },
+        _rawData: {
+          type: 'array',
+          items: { type: 'object' },
+        },
+      },
+      required: [],
+    },
+  });
+
+  const findings = context.jobState.collectedEntities.filter((e) =>
+    e._class.includes('Finding'),
+  );
+  expect(findings).toMatchGraphObjectSchema({
+    _class: ['Finding'],
+    schema: {
+      properties: {
+        _type: { const: 'cobalt_finding' },
+        pentestId: { type: 'string' },
+        _rawData: {
+          type: 'array',
+          items: { type: 'object' },
+        },
+      },
+      required: ['pentestId'],
     },
   });
 });
+
+describe('testing regex extraction of URLs from pentest descriptions', () => {
+  test('recognize link and number of CWE', () => {
+    const input =
+      'Your weakness is basically https://cwe.mitre.org/data/definitions/307.html okay?';
+    expect(getVulnerabilityLink(input)).toBe(
+      'https://cwe.mitre.org/data/definitions/307.html',
+    );
+    expect(getVulnerabilityNumber(getVulnerabilityLink(input))).toBe('CWE-307');
+  });
+});
+//more tests todo:
+//build in recording, with appropriate redaction, take out real API key
+
+//validate regex url scraper
+//end of of word marker to regex for urls so we don't get multiple in one match
+//validate bad token handling and refresh process
+//consider - should be just discard a finding without a pentest? Right now throws error
+//update snapshots when ready

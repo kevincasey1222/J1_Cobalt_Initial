@@ -48,8 +48,8 @@ export async function fetchFindings({
             proofOfConcept: findingProps.proof_of_concept,
             suggestedFix: findingProps.suggested_fix,
             prerequisites: findingProps.prerequisites,
-            pentestID: findingProps.pentest_id, //value of pentest Assessment _key
-            assetID: findingProps.asset_id, // value of asset _key (which could be class Application or something else)
+            pentestId: findingProps.pentest_id, //value of pentest Assessment _key
+            assetId: findingProps.asset_id, // value of asset _key (which could be class Application or something else)
             log: JSON.stringify(findingProps.log, null, 2),
           },
         },
@@ -60,7 +60,7 @@ export async function fetchFindings({
     const assessmentEntity = await jobState.findEntity(findingProps.pentest_id);
     if (!assessmentEntity) {
       throw new IntegrationMissingKeyError(
-        `Expected Assessment with key to exist (key=${findingProps.pentest_id})`,
+        `Expected Assessment with key to exist (key=${findingProps.pentest_id}) as part of Finding (key=${findingProps.id})`,
       );
     }
     await jobState.addRelationship(
