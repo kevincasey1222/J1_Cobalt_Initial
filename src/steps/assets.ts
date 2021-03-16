@@ -19,6 +19,7 @@ export async function fetchAssets({
   const accountEntity = (await jobState.getData(DATA_ACCOUNT_ENTITY)) as Entity;
   await apiClient.iterateAssets(async (asset) => {
     const assetProps = asset.resource;
+    delete asset.resource.attachments;
     const classesAssigned: string[] = [];
     switch (assetProps.asset_type) {
       case 'Web':

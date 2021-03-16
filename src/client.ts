@@ -33,7 +33,7 @@ type CobaltAsset = {
     title: string;
     description: string;
     asset_type: string;
-    attachments: object[];
+    attachments?: object[];
   };
 };
 

@@ -78,7 +78,6 @@ Object {
           "rawData": Object {
             "resource": Object {
               "asset_type": "api",
-              "attachments": Array [],
               "description": "",
               "id": "as_9ctVo4X",
               "title": "Test API Asset",
@@ -88,7 +87,7 @@ Object {
       ],
       "_type": "cobalt_asset",
       "assetType": "api",
-      "attachments": "[]",
+      "attachments": undefined,
       "createdOn": undefined,
       "description": "",
       "displayName": "Test API Asset",
@@ -105,7 +104,6 @@ Object {
           "rawData": Object {
             "resource": Object {
               "asset_type": "web",
-              "attachments": Array [],
               "description": "First test Asset",
               "id": "as_rPjSpXj",
               "title": "Test Asset #1",
@@ -115,7 +113,7 @@ Object {
       ],
       "_type": "cobalt_asset",
       "assetType": "web",
-      "attachments": "[]",
+      "attachments": undefined,
       "createdOn": undefined,
       "description": "First test Asset",
       "displayName": "Test Asset #1",
@@ -132,7 +130,6 @@ Object {
           "rawData": Object {
             "resource": Object {
               "asset_type": "cloud_config",
-              "attachments": Array [],
               "description": "",
               "id": "as_HrZ74Uh",
               "title": "Test Cloud Config",
@@ -142,7 +139,7 @@ Object {
       ],
       "_type": "cobalt_asset",
       "assetType": "cloud_config",
-      "attachments": "[]",
+      "attachments": undefined,
       "createdOn": undefined,
       "description": "",
       "displayName": "Test Cloud Config",
@@ -159,7 +156,6 @@ Object {
           "rawData": Object {
             "resource": Object {
               "asset_type": "web",
-              "attachments": Array [],
               "description": "",
               "id": "as_ClGUrXE",
               "title": "Test Crazy Chars Asset @#$%@(~~\`\`",
@@ -169,7 +165,7 @@ Object {
       ],
       "_type": "cobalt_asset",
       "assetType": "web",
-      "attachments": "[]",
+      "attachments": undefined,
       "createdOn": undefined,
       "description": "",
       "displayName": "Test Crazy Chars Asset @#$%@(~~\`\`",
@@ -186,7 +182,6 @@ Object {
           "rawData": Object {
             "resource": Object {
               "asset_type": "external_network",
-              "attachments": Array [],
               "description": "",
               "id": "as_Vw8HhoR",
               "title": "Test External Network Asset",
@@ -196,7 +191,7 @@ Object {
       ],
       "_type": "cobalt_asset",
       "assetType": "external_network",
-      "attachments": "[]",
+      "attachments": undefined,
       "createdOn": undefined,
       "description": "",
       "displayName": "Test External Network Asset",
@@ -213,7 +208,6 @@ Object {
           "rawData": Object {
             "resource": Object {
               "asset_type": "internal_network",
-              "attachments": Array [],
               "description": "",
               "id": "as_O6qPyLc",
               "title": "Test Internal Network Asset",
@@ -223,7 +217,7 @@ Object {
       ],
       "_type": "cobalt_asset",
       "assetType": "internal_network",
-      "attachments": "[]",
+      "attachments": undefined,
       "createdOn": undefined,
       "description": "",
       "displayName": "Test Internal Network Asset",
@@ -240,12 +234,6 @@ Object {
           "rawData": Object {
             "resource": Object {
               "asset_type": "mobile",
-              "attachments": Array [
-                Object {
-                  "download_url": "https://s3.amazonaws.com/assets.crowdcurity.com/uploads/attachment/file/109055/output.txt?X-Amz-Expires=600&X-Amz-Date=20210316T002554Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAI5LBXXUOXFQDEW5Q/20210316/us-east-1/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=efde14521e3cc5b3abe790d1322891e0c4ff9424f71438e8b3c8c17b03fcb4e1",
-                  "token": "att_LscczK8",
-                },
-              ],
               "description": "Some description of a  mobile asset",
               "id": "as_KmzMiKh",
               "title": "Test Mobile Asset",
@@ -255,12 +243,7 @@ Object {
       ],
       "_type": "cobalt_asset",
       "assetType": "mobile",
-      "attachments": "[
-  {
-    \\"token\\": \\"att_LscczK8\\",
-    \\"download_url\\": \\"https://s3.amazonaws.com/assets.crowdcurity.com/uploads/attachment/file/109055/output.txt?X-Amz-Expires=600&X-Amz-Date=20210316T002554Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAI5LBXXUOXFQDEW5Q/20210316/us-east-1/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=efde14521e3cc5b3abe790d1322891e0c4ff9424f71438e8b3c8c17b03fcb4e1\\"
-  }
-]",
+      "attachments": undefined,
       "createdOn": undefined,
       "description": "Some description of a  mobile asset",
       "displayName": "Test Mobile Asset",
@@ -277,7 +260,6 @@ Object {
           "rawData": Object {
             "resource": Object {
               "asset_type": "web_plus_api",
-              "attachments": Array [],
               "description": "",
               "id": "as_WFbWToK",
               "title": "Test Web+API Asset",
@@ -287,7 +269,7 @@ Object {
       ],
       "_type": "cobalt_asset",
       "assetType": "web_plus_api",
-      "attachments": "[]",
+      "attachments": undefined,
       "createdOn": undefined,
       "description": "",
       "displayName": "Test Web+API Asset",
@@ -304,7 +286,6 @@ Object {
           "rawData": Object {
             "resource": Object {
               "asset_type": "web",
-              "attachments": Array [],
               "description": "",
               "id": "as_m8KEIsR",
               "title": "Test Web Asset",
@@ -314,7 +295,7 @@ Object {
       ],
       "_type": "cobalt_asset",
       "assetType": "web",
-      "attachments": "[]",
+      "attachments": undefined,
       "createdOn": undefined,
       "description": "",
       "displayName": "Test Web Asset",
@@ -331,7 +312,6 @@ Object {
           "rawData": Object {
             "resource": Object {
               "asset_type": "web_plus_external_network",
-              "attachments": Array [],
               "description": "",
               "id": "as_qpShMvk",
               "title": "Test Web + External Network Asset",
@@ -341,7 +321,7 @@ Object {
       ],
       "_type": "cobalt_asset",
       "assetType": "web_plus_external_network",
-      "attachments": "[]",
+      "attachments": undefined,
       "createdOn": undefined,
       "description": "",
       "displayName": "Test Web + External Network Asset",
@@ -358,7 +338,6 @@ Object {
           "rawData": Object {
             "resource": Object {
               "asset_type": "web_plus_mobile",
-              "attachments": Array [],
               "description": "
 Как вы сегодня 
 Test of non English chars
@@ -372,7 +351,7 @@ Test of non English chars
       ],
       "_type": "cobalt_asset",
       "assetType": "web_plus_mobile",
-      "attachments": "[]",
+      "attachments": undefined,
       "createdOn": undefined,
       "description": "
 Как вы сегодня 

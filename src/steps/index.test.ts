@@ -134,6 +134,28 @@ describe('testing regex extraction of URLs from pentest descriptions', () => {
     );
     expect(getVulnerabilityNumber(getVulnerabilityLink(input))).toBe('CWE-307');
   });
+
+  test('recognize link and number of CVE from mitre', () => {
+    const input =
+      'Your vulnerability is basically https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-2138 okay?';
+    expect(getVulnerabilityLink(input)).toBe(
+      'https://nvd.nist.gov/vuln/detail/CVE-2021-2138', //yes, it's expected to change mitre to nvd
+    );
+    expect(getVulnerabilityNumber(getVulnerabilityLink(input))).toBe(
+      'CVE-2021-2138',
+    );
+  });
+
+  test('recognize link and number of CVE from nvd', () => {
+    const input =
+      'Your vulnerability is basically https://nvd.nist.gov/vuln/detail/CVE-2021-2138 okay?';
+    expect(getVulnerabilityLink(input)).toBe(
+      'https://nvd.nist.gov/vuln/detail/CVE-2021-2138',
+    );
+    expect(getVulnerabilityNumber(getVulnerabilityLink(input))).toBe(
+      'CVE-2021-2138',
+    );
+  });
 });
 //more tests todo:
 //build in recording, with appropriate redaction, take out real API key
